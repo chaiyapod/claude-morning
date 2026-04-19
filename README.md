@@ -9,40 +9,48 @@ A lightweight Docker container that runs Claude Code on a daily schedule to keep
 - Auth state is persisted in `./data/` so you only log in once
 - Logs timestamp and cost to stdout on each run
 
-## Setup
+## Usage
 
-### 1. Build the image
+### Option A: Pull from GHCR (recommended)
 
-```bash
-docker compose build
+Create a `docker-compose.yml`:
+
+```yaml
+services:
+  claude-morning:
+    image: ghcr.io/narze/claude-morning:latest
+    volumes:
+      - ./data:/root/.claude
+    command: daemon
+    environment:
+      - CLAUDE_CRON_SCHEDULE=0 8 * * *
+    restart: unless-stopped
 ```
 
-### 2. Authenticate
-
-Start the container, then exec in to log in via Claude's TUI:
+Then:
 
 ```bash
 docker compose up -d
 docker compose exec -it claude-morning claude
+# log in from within the TUI
 ```
 
-Login from within the TUI. Credentials are saved to `./data/` and persist across restarts.
+### Option B: Build from source
 
-### 3. Done
-
-The container will run the ping script at 8AM daily.
+```bash
+git clone https://github.com/narze/claude-morning
+cd claude-morning
+docker compose build
+docker compose up -d
+docker compose exec -it claude-morning claude
+# log in from within the TUI
+```
 
 ## Configuration
 
-| Environment variable   | Default        | Description           |
-|------------------------|----------------|-----------------------|
-| `CLAUDE_CRON_SCHEDULE` | `0 8 * * *`    | Cron schedule for ping |
-
-Override in `docker-compose.yml` or at runtime:
-
-```bash
-CLAUDE_CRON_SCHEDULE="0 9 * * *" docker compose up -d
-```
+| Environment variable   | Default      | Description            |
+|------------------------|--------------|------------------------|
+| `CLAUDE_CRON_SCHEDULE` | `0 8 * * *`  | Cron schedule for ping |
 
 ## Useful commands
 
@@ -63,12 +71,24 @@ docker compose exec claude-morning /scripts/ping.sh --debug
 docker compose exec -it claude-morning claude
 ```
 
+## Development
+
+```bash
+git clone https://github.com/narze/claude-morning
+cd claude-morning
+docker compose build
+docker compose up -d
+
+# Test the ping script
+docker compose exec claude-morning /scripts/ping.sh --debug
+```
+
 ## Files
 
 ```
-Dockerfile          — node:24-alpine + jq + claude-code
-entrypoint.sh       — daemon mode runs crond; otherwise passes args to claude
-scripts/ping.sh     — runs claude -p "ping" and logs timestamp + cost
+Dockerfile            — node:24-alpine + jq + claude-code
+entrypoint.sh         — daemon mode runs crond; otherwise passes args to claude
+scripts/ping.sh       — runs claude -p "ping" and logs timestamp + cost
 scripts/setup-cron.sh — writes crontab from $CLAUDE_CRON_SCHEDULE
-data/               — persisted Claude auth state (gitignored)
+data/                 — persisted Claude auth state (gitignored)
 ```
