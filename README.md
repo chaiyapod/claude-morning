@@ -54,7 +54,7 @@ docker compose exec -it claude-morning claude
 
 | Environment variable         | Default           | Description                     |
 |------------------------------|-------------------|---------------------------------|
-| `CLAUDE_MORNING_CRON_SCHEDULE`| `0 8 * * *`       | Cron schedule for ping          |
+| `CLAUDE_MORNING_CRON_SCHEDULE`| `0 8 * * *`       | Cron schedule (comma-separated for multiple, e.g. `0 8 * * *,0 20 * * *`) |
 | `TZ`                    | (none/UTC)        | Timezone (e.g. `Asia/Bangkok`)   |
 
 ## Examples

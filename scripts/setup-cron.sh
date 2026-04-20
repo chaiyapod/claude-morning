@@ -1,4 +1,10 @@
 #!/bin/sh
-SCHEDULE="${CLAUDE_MORNING_CRON_SCHEDULE:-0 8 * * *}"
-echo "$SCHEDULE /scripts/ping.sh 2>&1 | tee -a /var/log/claude-ping.log >> /proc/1/fd/1" > /etc/crontabs/root
-echo "Cron configured: $SCHEDULE"
+SCHEDULES="${CLAUDE_MORNING_CRON_SCHEDULES:-${CLAUDE_MORNING_CRON_SCHEDULE:-0 8 * * *}}"
+CRONFILE="/etc/crontabs/root"
+> "$CRONFILE"
+
+echo "# Generated crontab" >> "$CRONFILE"
+for SCHEDULE in $(echo "$SCHEDULES" | tr ',' ' '); do
+  echo "$SCHEDULE /scripts/ping.sh 2>&1 | tee -a /var/log/claude-ping.log >> /proc/1/fd/1" >> "$CRONFILE"
+  echo "Cron scheduled: $SCHEDULE" >&2
+done
