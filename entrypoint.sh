@@ -1,7 +1,6 @@
 #!/bin/sh
-if [ "$CLAUDE_MORNING_TZ" != "" ]; then
-  export TZ="$CLAUDE_MORNING_TZ"
-  echo "Timezone set to: $TZ"
+if [ "$TZ" != "" ]; then
+  echo "Timezone: $TZ"
 fi
 if [ "$1" = "daemon" ]; then
   /scripts/setup-cron.sh

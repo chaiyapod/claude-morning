@@ -24,7 +24,7 @@ services:
     command: daemon
     environment:
       - CLAUDE_MORNING_CRON_SCHEDULE=0 8 * * *
-      - CLAUDE_MORNING_TZ=Asia/Bangkok
+      - TZ=Asia/Bangkok
     restart: unless-stopped
 
 volumes:
@@ -55,7 +55,7 @@ docker compose exec -it claude-morning claude
 | Environment variable         | Default           | Description                     |
 |------------------------------|-------------------|---------------------------------|
 | `CLAUDE_MORNING_CRON_SCHEDULE`| `0 8 * * *`       | Cron schedule for ping          |
-| `CLAUDE_MORNING_TZ`          | (none/UTC)        | Timezone (e.g. `Asia/Bangkok`)  |
+| `TZ`                    | (none/UTC)        | Timezone (e.g. `Asia/Bangkok`)   |
 
 ## Examples
 
@@ -64,7 +64,7 @@ docker compose exec -it claude-morning claude
 ```yaml
 environment:
   - CLAUDE_MORNING_CRON_SCHEDULE=0 6 * * *
-  - CLAUDE_MORNING_TZ=Asia/Tokyo
+  - TZ=Asia/Tokyo
 ```
 
 ## Useful commands
