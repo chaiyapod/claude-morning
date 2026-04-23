@@ -1,5 +1,5 @@
 services:
-  claude-morning:
+  cron:
     build: .
     volumes:
       - ./data:/root/.claude
@@ -8,4 +8,4 @@ services:
     environment:
       - CLAUDE_MORNING_CRON_SCHEDULE=0 8 * * *
       - TZ=Asia/Bangkok
-    restart: unless-stopped
+    restart: always
