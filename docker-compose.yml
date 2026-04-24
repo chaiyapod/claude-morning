@@ -1,7 +1,7 @@
 services:
-  cron:
+  claude-morning:
     build: .
-    image: claude-morning
+    image: app
     volumes:
       - ./data:/root/.claude
       - .:/workspace

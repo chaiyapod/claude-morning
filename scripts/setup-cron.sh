@@ -4,7 +4,10 @@ CRONFILE="/etc/crontabs/root"
 > "$CRONFILE"
 
 echo "# Generated crontab" >> "$CRONFILE"
-for SCHEDULE in $(echo "$SCHEDULES" | tr ',' ' '); do
+set -f
+IFS=','
+for SCHEDULE in $SCHEDULES; do
   echo "$SCHEDULE /scripts/ping.sh 2>&1 | tee -a /var/log/claude-ping.log >> /proc/1/fd/1" >> "$CRONFILE"
   echo "Cron scheduled: $SCHEDULE" >&2
 done
+set +f
